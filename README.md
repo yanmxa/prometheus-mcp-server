@@ -1,5 +1,8 @@
 # Prometheus MCP Server
 
+[![npm version](https://badge.fury.io/js/prometheus-mcp-server.svg)](https://www.npmjs.com/package/prometheus-mcp-server)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
 A Model Context Protocol (MCP) server that provides seamless integration with Prometheus, enabling AI assistants to query metrics, discover available data, and analyze system performance through natural language interactions.
 
 ## Features
@@ -29,14 +32,21 @@ Add to your MCP client settings:
 }
 ```
 
-### Using local build
+### Using global installation
+
+First install the package globally:
+
+```bash
+npm install -g prometheus-mcp-server
+```
+
+Then configure your MCP client:
 
 ```json
 {
   "mcpServers": {
     "prometheus": {
-      "command": "node",
-      "args": ["/path/to/prometheus-mcp-server/build/index.js"],
+      "command": "prometheus-mcp-server",
       "env": {
         "PROMETHEUS_URL": "http://localhost:9090"
       }
