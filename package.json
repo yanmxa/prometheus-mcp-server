@@ -1,0 +1,26 @@
+{
+  "name": "prometheus-mcp-server",
+  "version": "1.0.0",
+  "description": "Model Context Protocol server for Prometheus queries and metrics",
+  "type": "module",
+  "main": "build/index.js",
+  "bin": {
+    "prometheus-mcp-server": "build/index.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsx src/index.ts",
+    "start": "node build/index.js",
+    "inspector": "npx @modelcontextprotocol/inspector node $PWD/build/index.js"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "1.17.1",
+    "axios": "^1.6.0"
+  },
+  "devDependencies": {
+    "@modelcontextprotocol/inspector": "0.16.2",
+    "@types/node": "^20.0.0",
+    "tsx": "^4.0.0",
+    "typescript": "^5.0.0"
+  }
+}
