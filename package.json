@@ -7,11 +7,39 @@
   "bin": {
     "prometheus-mcp-server": "build/index.js"
   },
+  "files": [
+    "build/**/*",
+    "README.md",
+    "LICENSE"
+  ],
   "scripts": {
     "build": "tsc",
     "dev": "tsx src/index.ts",
     "start": "node build/index.js",
-    "inspector": "npx @modelcontextprotocol/inspector node $PWD/build/index.js"
+    "inspector": "npx @modelcontextprotocol/inspector node $PWD/build/index.js",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "prometheus",
+    "mcp",
+    "model-context-protocol",
+    "monitoring",
+    "metrics",
+    "typescript",
+    "ai"
+  ],
+  "author": "Meng Yan <myan@redhat.com>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yanmxa/prometheus-mcp-server.git"
+  },
+  "bugs": {
+    "url": "https://github.com/yanmxa/prometheus-mcp-server/issues"
+  },
+  "homepage": "https://github.com/yanmxa/prometheus-mcp-server#readme",
+  "engines": {
+    "node": ">=18"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "1.17.1",
