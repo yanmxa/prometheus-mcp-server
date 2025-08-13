@@ -5,7 +5,8 @@ import {
   PrometheusResponse, 
   QueryResult, 
   TargetsResult,
-  MetricMetadata
+  MetricMetadata,
+  QueryData
 } from './types.js';
 
 export class PrometheusClient {
@@ -32,18 +33,64 @@ export class PrometheusClient {
     });
   }
 
-  async query(query: string, time?: string): Promise<PrometheusResponse<QueryResult>> {
+  private filterQueryResult(result: QueryResult, includes?: string[]): QueryResult {
+    if (!includes || includes.length === 0) {
+      return result;
+    }
+
+    const filteredResult = result.result.map((data: QueryData) => {
+      if (!data.metric) {
+        return data;
+      }
+
+      const filteredMetric: Record<string, string> = {};
+      
+      // Always preserve __name__ if it exists
+      if ('__name__' in data.metric) {
+        filteredMetric['__name__'] = data.metric['__name__'];
+      }
+      
+      // Add other requested properties
+      for (const key of includes) {
+        if (key in data.metric && key !== '__name__') {
+          filteredMetric[key] = data.metric[key];
+        }
+      }
+
+      return {
+        ...data,
+        metric: filteredMetric
+      };
+    });
+
+    return {
+      ...result,
+      result: filteredResult
+    };
+  }
+
+  async query(query: string, time?: string, includes?: string[]): Promise<PrometheusResponse<QueryResult>> {
     const params: Record<string, string> = { query };
     if (time) params.time = time;
     const response = await this.client.get<PrometheusResponse<QueryResult>>('/api/v1/query', { params });
+    
+    if (response.data.data && includes) {
+      response.data.data = this.filterQueryResult(response.data.data, includes);
+    }
+    
     return response.data;
   }
 
-  async range(query: string, start: string, end: string, step: string): Promise<PrometheusResponse<QueryResult>> {
+  async range(query: string, start: string, end: string, step: string, includes?: string[]): Promise<PrometheusResponse<QueryResult>> {
     const response = await this.client.get<PrometheusResponse<QueryResult>>('/api/v1/query_range', {
       params: { query, start, end, step },
       timeout: 30000,
     });
+    
+    if (response.data.data && includes) {
+      response.data.data = this.filterQueryResult(response.data.data, includes);
+    }
+    
     return response.data;
   }
 

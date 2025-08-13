@@ -10,6 +10,7 @@ export interface PrometheusConfig {
 export interface PromQueryArgs {
   query: string;
   time?: string;
+  includes?: string[];
 }
 
 export interface PromRangeArgs {
@@ -17,6 +18,7 @@ export interface PromRangeArgs {
   start: string;
   end: string;
   step: string;
+  includes?: string[];
 }
 
 export interface PromMetadataArgs {

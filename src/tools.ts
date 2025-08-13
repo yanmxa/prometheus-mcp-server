@@ -16,6 +16,7 @@ export const tools: Tool[] = [
       properties: {
         query: { type: 'string', description: 'PromQL query expression' },
         time: { type: 'string', description: 'Evaluation timestamp (optional)' },
+        includes: { type: 'array', items: { type: 'string' }, description: 'Metric properties to include in response (optional)' },
       },
       required: ['query'],
     },
@@ -30,6 +31,7 @@ export const tools: Tool[] = [
         start: { type: 'string', description: 'Start timestamp' },
         end: { type: 'string', description: 'End timestamp' },
         step: { type: 'string', description: 'Step interval (e.g., "15s", "1m")' },
+        includes: { type: 'array', items: { type: 'string' }, description: 'Metric properties to include in response (optional)' },
       },
       required: ['query', 'start', 'end', 'step'],
     },
@@ -92,16 +94,16 @@ export async function handleToolCall(
         if (!isPromQueryArgs(args)) {
           throw new Error('Invalid arguments for prom_query');
         }
-        const { query, time } = args;
-        result = await prometheusClient.query(query, time);
+        const { query, time, includes } = args;
+        result = await prometheusClient.query(query, time, includes);
         break;
       }
       case 'prom_range': {
         if (!isPromRangeArgs(args)) {
           throw new Error('Invalid arguments for prom_range');
         }
-        const { query, start, end, step } = args;
-        result = await prometheusClient.range(query, start, end, step);
+        const { query, start, end, step, includes } = args;
+        result = await prometheusClient.range(query, start, end, step, includes);
         break;
       }
       case 'prom_discover': {
